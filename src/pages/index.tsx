@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { User } from "@/types";
 import { useUserContext } from "../context/UserContext";
 import { Button } from "react-bootstrap";
+import { Table, Card, ListGroup } from "react-bootstrap";
+
 
 export default function Home () {
 
@@ -33,7 +35,8 @@ export default function Home () {
         deleteUser(id);
     };
 
-    /* const updateUser = async (id: number, user: User) => {
+    // not correct for update and anyways for users we don't need to do it
+    const handleUpdateUser = async (id: number, user: User) => {
         let {name, email} = user;
         const res = await fetch("/api/users/${id}", {
             method: "PUT",
@@ -43,27 +46,44 @@ export default function Home () {
         const updatedUser = await res.json();
         users[id] = updatedUser;
         setUsers([...users]);
-    }; */
+    };
 
     return (
         <div className="container">
-            <h1 className="text-primary">User List</h1>
-            <ul>
-                {users.map(user => (
-                    <li key={user.id}>
-                        {user.name} ({user.email})
-                        <Button variant="primary" onClick={() => handleDeleteUser(user.id)}>Delete</Button>
-                        {/* <button onClick={() => updateUser(user.id, user)}>Update</button> */}
-                    </li>
-                ))}
-            </ul>
-
+            <br/>
             <h2 className="text-primary">Add User</h2>
-            <input type="text" placeholder="Name" onChange={e => setName(e.target.value)} />
-            <input type="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
+            <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
+            <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
             <Button variant="primary" onClick={handleAddUser}>
                 Add
             </Button>
+            <br/>
+            <br/>
+            <h3 className="text-primary">User List</h3>
+            <Table striped bordered style={{width:'600px'}}>
+                <thead>
+                    <tr>
+                        <th style={{width:'40%'}}>Country Name</th>
+                        <th style={{width:'40%'}}>Capital </th>
+                        <th style={{width:'20%'}} colSpan={2}> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user)=>{
+                        // console.log(user);
+                        return (
+                            <tr key={user?.id}>
+                                <td>{user?.name}</td>
+                                <td>{user?.email}</td>
+                                <td><Button variant="primary" onClick={() => handleDeleteUser(user.id)}>Delete</Button></td>
+                                {/* <td><Button variant="primary" onClick={() => handleUpdateUser(user.id, user)}>Update</Button></td> */}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </Table>
+
+            
         </div>
     );
 
