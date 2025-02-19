@@ -81,9 +81,7 @@ export default function Home () {
                         );
                     })}
                 </tbody>
-            </Table>
-
-            
+            </Table>            
         </div>
     );
 

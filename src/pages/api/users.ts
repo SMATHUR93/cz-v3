@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { users } from "./db";
-import { User } from "@/types";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse){
+    
+    for(var el in users){
+        console.log(users[el]);
+    }
+
     if(req.method == 'GET'){
         console.log("I am in : GET all");
         return res.status(200).json(users);
