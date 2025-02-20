@@ -9,7 +9,11 @@ const UserForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name && email) {
-      addUser({ name, email });
+      addUser({
+          name, 
+          email,
+          id: 0
+      });
       setName('');
       setEmail('');
     }

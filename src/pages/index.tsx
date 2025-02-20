@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUsers } from '../context/UserContext';
 import UserForm from '../components/UserForm';
+import { User } from '@/types';
 
 const Home = () => {
   const { users, deleteUser } = useUsers();
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null; // Prevent rendering during SSR
+
   return (
     <div>
       <h1>User Management</h1>
       <UserForm />
       <ul>
-        {users.map((user: {
-            id: React.Key | null | undefined; 
-            name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
-            email: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
-        }) => (
+        {users.map((user: User) => (
           <li key={user.id}>
             {user.name} ({user.email}) <button onClick={() => deleteUser(user.id)}>Delete</button>
           </li>
