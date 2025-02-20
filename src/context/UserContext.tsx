@@ -1,35 +1,41 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import { User } from "../types";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
-interface UserContextType {
-  users: User[];
-  setUsers: (users: User[]) => void;
-  addUser: (user: User) => void;
-  deleteUser: (id: number) => void;
-}
+const UserContext = createContext<any>(null);
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+export const useUsers = () => useContext(UserContext);
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [users, setUsers] = useState<User[]>([]);
-    const addUser = (user: User) => setUsers([...users, user]);
-    const deleteUser = (id: number) => setUsers(users.filter(user => user.id !== id));
-    return (
-        <UserContext.Provider value={{ 
-            users, 
-            setUsers,
-            addUser, 
-            deleteUser 
-        }}>
-            {children}
-        </UserContext.Provider>
-    );
+const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const [users, setUsers] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const querySnapshot = await getDocs(collection(db, 'users'));
+      setUsers(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    };
+    fetchUsers();
+  }, []);
+  
+  const addUser = async (user: { name: string; email: string }) => {
+    const docRef = await addDoc(collection(db, 'users'), user);
+    setUsers([...users, { id: docRef.id, ...user }]);
+  };
+  
+  const updateUser = async (id: string, user: { name: string; email: string }) => {
+    const userRef = doc(db, 'users', id);
+    await updateDoc(userRef, user);
+    setUsers(users.map(u => (u.id === id ? { ...u, ...user } : u)));
+  };
+  
+  const deleteUser = async (id: string) => {
+    await deleteDoc(doc(db, 'users', id));
+    setUsers(users.filter(user => user.id !== id));
+  };
+  
+  return (
+    <UserContext.Provider value={{ users, addUser, updateUser, deleteUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
-
-export const useUserContext = () => {
-    const context = useContext(UserContext);
-    if (!context) {
-        throw new Error("useUserContext must be inside a UserProvider");
-    }
-    return context;
-};
+export default UserProvider;

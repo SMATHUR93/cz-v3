@@ -1,18 +1,18 @@
 import type { AppProps } from 'next/app';
-import { UserProvider } from "../context/UserContext";
+import { AuthProvider } from '../context/AuthContext';
+import UserProvider from '../context/UserContext';
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 /* import { AuthProvider } from '../context/AuthContext'; */
 
 function MyApp({ Component, pageProps }: AppProps) {
-    {/* <AuthProvider>
-      <Component {...pageProps} />
-    </AuthProvider> */}    
     return (
-    <UserProvider>
-      <Component {...pageProps} />
-    </UserProvider>
-  );
-}
+      <AuthProvider>
+        <UserProvider>
+          <Component {...pageProps} />
+        </UserProvider>
+      </AuthProvider>
+    );
+  }
 
 export default MyApp;

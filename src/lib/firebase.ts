@@ -1,9 +1,14 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 
-const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG || "{}");
+const firebaseConfig = {
+    apiKey: "AIzaSyAst16fVklGUvnXuJGoIAnbjUknP_wA_gc",
+    authDomain: "shrek-test-project.firebaseapp.com",
+    projectId: "shrek-test-project",
+    storageBucket: "shrek-test-project.firebasestorage.app",
+    messagingSenderId: "334046816611",
+    appId: "1:334046816611:web:f2871bb15470f7c8fe8b56"
+};
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-export { db };
+export const db = getFirestore(app);

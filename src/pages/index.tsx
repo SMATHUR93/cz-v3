@@ -1,4 +1,31 @@
-import { useEffect, useState } from "react";
+import React from 'react';
+import { useUsers } from '../context/UserContext';
+import UserForm from '../components/UserForm';
+
+const Home = () => {
+  const { users, deleteUser } = useUsers();
+  return (
+    <div>
+      <h1>User Management</h1>
+      <UserForm />
+      <ul>
+        {users.map((user: {
+            id: React.Key | null | undefined; 
+            name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
+            email: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
+        }) => (
+          <li key={user.id}>
+            {user.name} ({user.email}) <button onClick={() => deleteUser(user.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+export default Home;
+
+
+/* import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import { Button } from "react-bootstrap";
 import { Table } from "react-bootstrap";
@@ -35,7 +62,7 @@ export default function Home () {
     };
 
     // not correct for update and anyways for users we don't need to do it
-    /* const handleUpdateUser = async (id: number, user: User) => {
+    const handleUpdateUser = async (id: number, user: User) => {
         let {name, email} = user;
         const res = await fetch("/api/users/${id}", {
             method: "PUT",
@@ -45,7 +72,7 @@ export default function Home () {
         const updatedUser = await res.json();
         users[id] = updatedUser;
         setUsers([...users]);
-    }; */
+    };
 
     return (
         <div className="container">
@@ -69,13 +96,13 @@ export default function Home () {
                 </thead>
                 <tbody>
                     {users.map((user)=>{
-                        // console.log(user);
+                        console.log(user);
                         return (
                             <tr key={user?.id}>
                                 <td>{user?.name}</td>
                                 <td>{user?.email}</td>
                                 <td><Button variant="primary" onClick={() => handleDeleteUser(user.id)}>Delete</Button></td>
-                                {/* <td><Button variant="primary" onClick={() => handleUpdateUser(user.id, user)}>Update</Button></td> */}
+                                <td><Button variant="primary" onClick={() => handleUpdateUser(user.id, user)}>Update</Button></td>
                             </tr>
                         );
                     })}
@@ -84,4 +111,4 @@ export default function Home () {
         </div>
     );
 
-}
+} */
