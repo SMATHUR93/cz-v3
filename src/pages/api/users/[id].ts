@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { users } from "../db";
-import { User } from "@/types";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse){
 
-    const { id } = req.query;
+    //const { id } = req.query;
+    const id = (req.query['id'] || req.query['id']) as string;
+
     // console.log(`I am in [id].ts where id = ${id}`);
-    for(var el in users){
+    for(const el in users){
         console.log(users[el]);
     }
     // console.log(` and users = ${users}`);

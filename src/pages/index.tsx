@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { User } from "@/types";
 import { useUserContext } from "../context/UserContext";
 import { Button } from "react-bootstrap";
-import { Table, Card, ListGroup } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 
 export default function Home () {
@@ -24,8 +23,8 @@ export default function Home () {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email }),
         });
-        const newUsers = await res.json();
-        setUsers([...newUsers]);
+        const newUser = await res.json();
+        addUser(newUser);
     };
 
     const handleDeleteUser = async (id: number) => {
@@ -36,7 +35,7 @@ export default function Home () {
     };
 
     // not correct for update and anyways for users we don't need to do it
-    const handleUpdateUser = async (id: number, user: User) => {
+    /* const handleUpdateUser = async (id: number, user: User) => {
         let {name, email} = user;
         const res = await fetch("/api/users/${id}", {
             method: "PUT",
@@ -46,7 +45,7 @@ export default function Home () {
         const updatedUser = await res.json();
         users[id] = updatedUser;
         setUsers([...users]);
-    };
+    }; */
 
     return (
         <div className="container">
@@ -63,8 +62,8 @@ export default function Home () {
             <Table striped bordered style={{width:'600px'}}>
                 <thead>
                     <tr>
-                        <th style={{width:'40%'}}>Country Name</th>
-                        <th style={{width:'40%'}}>Capital </th>
+                        <th style={{width:'40%'}}>Name</th>
+                        <th style={{width:'40%'}}>Email </th>
                         <th style={{width:'20%'}} colSpan={2}> Actions </th>
                     </tr>
                 </thead>
