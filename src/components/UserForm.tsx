@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useUsers } from '../context/UserContext';
+/* import React, { useState } from 'react';
+import { useUsers } from '../context/ProductContext';
 
 const UserForm = () => {
   const { addUser } = useUsers();
@@ -27,4 +27,4 @@ const UserForm = () => {
     </form>
   );
 };
-export default UserForm;
+export default UserForm; */

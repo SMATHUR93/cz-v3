@@ -1,14 +1,16 @@
 import type { AppProps } from 'next/app';
-import UserProvider from '../context/UserContext';
+import ProductProvider from '../context/ProductContext';
+import AuthProvider from '../context/AuthContext';
 import '../styles/globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-/* import { AuthProvider } from '../context/AuthContext'; */
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <UserProvider>
-            <Component {...pageProps} />
-        </UserProvider>
+        <AuthProvider>
+            <ProductProvider>
+                <Component {...pageProps} />
+            </ProductProvider>
+        </AuthProvider>    
     );
   }
 

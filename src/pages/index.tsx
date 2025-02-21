@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useUsers } from '../context/UserContext';
-import UserForm from '../components/UserForm';
-import { User } from '@/types';
+import { useProduct } from '../context/ProductContext';
+import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/router';
+import { Product } from '@/types';
 
 const Home = () => {
-  const { users, deleteUser } = useUsers();
-
-  const [isClient, setIsClient] = useState(false);
+  const { user, logout } = useAuth();
+  const { products, fetchProducts, addProduct, deleteProduct } = useProduct();
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null; // Prevent rendering during SSR
+    if (!user) {
+        router.push('/login');
+    }
+    else fetchProducts();
+  }, [user]);
 
   return (
     <div>
-      <h1>User Management</h1>
-      <UserForm />
+      <h1>Product Management</h1>
+      <button onClick={logout}>Logout</button>
+      <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+      <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+      <button onClick={() => addProduct({ name, price })}>Add Product</button>
       <ul>
-        {users.map((user: User) => (
-          <li key={user.id}>
-            {user.name} ({user.email}) <button onClick={() => deleteUser(user.id)}>Delete</button>
+        {products.map((product: Product) => (
+          <li key={product.id}>
+            {product.name} - ${product.price}
+            {/* <button onClick={() => updateProduct(product.id!, { name, price })}>Edit</button> */}
+            <button onClick={() => deleteProduct(product.id!)}>Delete</button>
           </li>
         ))}
       </ul>
