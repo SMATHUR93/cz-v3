@@ -58,11 +58,7 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
     await deleteDoc(doc(db, 'products', id));
     fetchProducts();
   };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
+  
   return (
     <ProductContext.Provider value={{ products, fetchProducts, addProduct, deleteProduct }}>
       {children}
