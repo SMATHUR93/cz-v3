@@ -22,9 +22,11 @@ const Home = () => {
     <div>
       <h1>Product Management</h1>
       <button onClick={logout}>Logout</button>
+      <br/>
       <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
       <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
       <button onClick={() => addProduct({ name, price })}>Add Product</button>
+      <br/>
       <ul>
         {products.map((product: Product) => (
           <li key={product.id}>
