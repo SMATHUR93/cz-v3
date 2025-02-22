@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Ignore Firebase Service Account Key
+src/lib/firebase-service-account.json
