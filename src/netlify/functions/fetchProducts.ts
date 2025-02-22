@@ -7,7 +7,8 @@ import * as path from "path";
 if (!admin.apps.length) {
   let serviceAccount: admin.ServiceAccount;
 
-  if (process.env.NETLIFY) {
+  console.log(`process.env.NETLIFY = ${process.env.NETLIFY}`);
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     // 🔹 Use Netlify Environment Variable in Production
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
   } else {

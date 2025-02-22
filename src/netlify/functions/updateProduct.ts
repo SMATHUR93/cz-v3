@@ -7,7 +7,7 @@ import * as path from "path";
 if (!admin.apps.length) {
   let serviceAccount: admin.ServiceAccount;
 
-  if (process.env.NETLIFY) {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     // 🔹 Use Netlify Environment Variable in Production
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
   } else {
@@ -31,12 +31,19 @@ export const handler: Handler = async (event) => {
   if (event.httpMethod !== "PUT") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
-
   try {
-    const { id, name, price, description } = JSON.parse(event.body as string);
+    const { id, name, price } = JSON.parse(event.body || "{}");
+    if (!id || !name || !price) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing required fields" }),
+      };
+    }
     await db.collection("products").doc(id).update({ name, price, description });
-
-    return { statusCode: 200, body: JSON.stringify({ message: "Product updated successfully." }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ id, name, price }),
+    };
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({ error: error }) };
   }

@@ -7,7 +7,7 @@ import * as path from "path";
 if (!admin.apps.length) {
   let serviceAccount: admin.ServiceAccount;
 
-  if (process.env.NETLIFY) {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     // 🔹 Use Netlify Environment Variable in Production
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
   } else {
@@ -31,12 +31,20 @@ export const handler: Handler = async (event) => {
   if (event.httpMethod !== "DELETE") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
-
   try {
-    const { id } = JSON.parse(event.body as string);
-    await db.collection("products").doc(id).delete();
 
-    return { statusCode: 200, body: JSON.stringify({ message: "Product deleted successfully." }) };
+    const { id } = JSON.parse(event.body || "{}");
+    if (!id) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing product ID" }),
+      };
+    }
+    await db.collection("products").doc(id).delete();
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Product deleted successfully" }),
+    };
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({ error: error }) };
   }
