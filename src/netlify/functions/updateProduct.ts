@@ -39,7 +39,7 @@ export const handler: Handler = async (event) => {
         body: JSON.stringify({ error: "Missing required fields" }),
       };
     }
-    await db.collection("products").doc(id).update({ name, price, description });
+    await db.collection("products").doc(id).update({ name, price });
     return {
       statusCode: 200,
       body: JSON.stringify({ id, name, price }),
