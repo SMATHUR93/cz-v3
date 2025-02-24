@@ -20,7 +20,7 @@ export const useProduct = () => {
 };
 
 const ProductProvider = ({ children }: { children: ReactNode }) => {
-  
+
   const [products, setProducts] = useState<Product[]>([]);
   const [userAuthenticated, setUserAuthenticated] = useState(false);
   const API_BASE = process.env.NODE_ENV === "development" ? "http://localhost:8888" : "";
@@ -44,11 +44,10 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("User not authenticated");
     }
     const token = await user.getIdToken();
-    
     try {
       const response = await fetch(`${API_BASE}/.netlify/functions/fetchProducts`, {
-        headers: { 
-          Authorization: `Bearer ${token}` 
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       });
       if (!response.ok) {
@@ -62,10 +61,21 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addProduct = async (product: Product) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const token = await user.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/addProduct`, {
         method: "POST",
         body: JSON.stringify(product),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchProducts();
     } catch (error) {
@@ -74,10 +84,21 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
   };
 
   /* const updateProduct = async (id: string, product: Product) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const token = await user.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/updateProduct`, {
         method: "PUT",
         body: JSON.stringify({ id, ...product }),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchProducts();
     } catch (error) {
@@ -86,10 +107,21 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
   }; */
 
   const deleteProduct = async (id: string) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const token = await user.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/deleteProduct`, {
         method: "DELETE",
         body: JSON.stringify({ id }),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchProducts();
     } catch (error) {

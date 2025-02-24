@@ -48,7 +48,6 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       throw new Error("User not authenticated");
     }
     const token = await user.getIdToken();
-
     try {
       const response = await fetch(`${API_BASE}/.netlify/functions/fetchUsers`, {
         headers: {
@@ -65,11 +64,22 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addUser = async (user: User) => {
+  const addUser = async (userObj: User) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const loggedInUser = auth.currentUser;
+    if (!loggedInUser) {
+      throw new Error("User not authenticated");
+    }
+    const token = await loggedInUser.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/addUser`, {
         method: "POST",
-        body: JSON.stringify(user),
+        body: JSON.stringify(userObj),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchUsers();
     } catch (error) {
@@ -77,11 +87,22 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  /* const updateUser = async (id: string, user: User) => {
+  /* const updateUser = async (id: string, userObj: User) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const loggedInUser = auth.currentUser;
+    if (!loggedInUser) {
+      throw new Error("User not authenticated");
+    }
+    const token = await loggedInUser.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/updateUser`, {
         method: "PUT",
-        body: JSON.stringify({ id, ...user }),
+        body: JSON.stringify({ id, ...userObj }),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchProducts();
     } catch (error) {
@@ -90,10 +111,21 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   }; */
 
   const deleteUser = async (id: string) => {
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
+    const loggedInUser = auth.currentUser;
+    if (!loggedInUser) {
+      throw new Error("User not authenticated");
+    }
+    const token = await loggedInUser.getIdToken();
     try {
       await fetch(`${API_BASE}/.netlify/functions/deleteUser`, {
         method: "DELETE",
         body: JSON.stringify({ id }),
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       fetchUsers();
     } catch (error) {
