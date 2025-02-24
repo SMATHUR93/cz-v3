@@ -19,6 +19,6 @@ export const authenticate = async (event: HandlerEvent) => {
 
     return null; // ✅ Authentication successful, proceed with the request
   } catch (error) {
-    return { statusCode: 403, body: JSON.stringify({ error: "Forbidden: Invalid token" }) };
+    return { statusCode: 403, body: JSON.stringify({ error: `Forbidden: Invalid token = ${error}` }) };
   }
 };
