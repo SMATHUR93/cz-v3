@@ -3,4 +3,10 @@ export interface Product {
     name: string;
     price: number;
 };
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+};
   

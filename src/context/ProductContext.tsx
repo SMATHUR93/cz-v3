@@ -36,17 +36,24 @@ const ProductProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const fetchProducts = async () => {
-    if (!userAuthenticated) return; // Prevent fetching if not logged in
+    if (!userAuthenticated) {
+      return; // Prevent fetching if not logged in
+    }
     const user = auth.currentUser;
-    if (!user) throw new Error("User not authenticated");
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
     const token = await user.getIdToken();
+    
     try {
       const response = await fetch(`${API_BASE}/.netlify/functions/fetchProducts`, {
         headers: { 
           Authorization: `Bearer ${token}` 
         }
       });
-      if (!response.ok) throw new Error("Failed to fetch products");
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
       const data = await response.json();
       setProducts(data);
     } catch (error) {

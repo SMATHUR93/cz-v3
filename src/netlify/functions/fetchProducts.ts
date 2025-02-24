@@ -3,6 +3,8 @@ import * as admin from "firebase-admin";
 import * as fs from "fs";
 import * as path from "path";
 
+import { authenticate } from "./utils/authMiddleware";
+
 // Initialize Firebase Admin only once
 if (!admin.apps.length) {
   let serviceAccount: admin.ServiceAccount;
@@ -29,6 +31,13 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 const handler: Handler = async (event, context) => {
+
+    // 🔹 Authenticate the request
+    const authError = await authenticate(event);
+    if (authError) {
+        return authError;
+    }
+
     console.log(`event is ${event}`);
     console.log(`context is ${context}`);
     try {
@@ -44,33 +53,3 @@ const handler: Handler = async (event, context) => {
 };
 
 export { handler };
-
-
-
-/* import { Handler } from "@netlify/functions";
-import { db } from "../../lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
-
-export const handler: Handler = async (event, context) => {
-    const user = context.clientContext?.user;
-    if (!user) {
-        return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
-    }
-    try {
-        const querySnapshot = await getDocs(collection(db, "products"));
-        const products = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        return {
-            statusCode: 200,
-            body: JSON.stringify(products)
-        };
-    } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: "Failed to fetch products = " + e }),
-        };
-    }
-};
- */
